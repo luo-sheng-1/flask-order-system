@@ -7,21 +7,11 @@ from sqlalchemy.orm import sessionmaker
 
 from config import Config
 
-# BUG: a module-level raw engine + sessionmaker is created outside of
-# Flask-SQLAlchemy's management.  Sessions obtained from ExportSession
-# are never tracked by the Flask app's teardown_appcontext, so calling
-# code must remember to close() every session manually.  If any caller
-# forgets, the connection is leaked.
 _raw_engine = create_engine(Config.SQLALCHEMY_DATABASE_URI)
 ExportSession = sessionmaker(bind=_raw_engine)
 
 
 def export_orders_to_file():
-    """
-    Export orders to a CSV file using a raw session.
-    BUG: the session is created but never closed.  Its connection
-    stays checked out of the pool until the process exits.
-    """
     session = ExportSession()
     rows = session.execute(
         text("SELECT id, product_id, quantity, amount, status FROM orders")

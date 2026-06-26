@@ -47,14 +47,6 @@ def create_order():
 
 @bp.route("/export")
 def export_orders():
-    """
-    Export all orders as CSV.
-    BUG: db.engine.connect() borrows a raw connection from the pool,
-    but conn is never closed.  Flask-SQLAlchemy's teardown_appcontext
-    only calls db.session.remove() ― it does NOT touch raw connections
-    obtained via engine.connect().  Each call to this endpoint leaks
-    one connection permanently.
-    """
     conn = db.engine.connect()
     rows = conn.execute(
         text("SELECT id, product_id, quantity, amount, status FROM orders")

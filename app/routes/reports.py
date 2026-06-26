@@ -9,14 +9,6 @@ bp = Blueprint("reports", __name__, url_prefix="/api/reports")
 
 
 def _generate_daily_summary(app):
-    """
-    Generate daily sales summary in a background thread.
-    BUG: app.app_context().push() is called but the returned context
-    is never popped.  Flask-SQLAlchemy registers teardown_appcontext
-    on context pop ― if pop never happens, session.remove() is never
-    called, and the connection borrowed by db.session never returns
-    to the pool.
-    """
     app.app_context().push()
     result = db.session.execute(
         text(
