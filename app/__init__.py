@@ -16,9 +16,13 @@ def create_app():
 
     db.init_app(app)
 
-    from app.routes import orders, reports
+    from app.routes import orders, products, reports, dashboard
+    from app.utils import errors
 
     app.register_blueprint(orders.bp)
+    app.register_blueprint(products.bp)
     app.register_blueprint(reports.bp)
+    app.register_blueprint(dashboard.bp)
+    errors.register_handlers(app)
 
     return app

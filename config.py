@@ -11,3 +11,4 @@ class Config:
         "max_overflow": 10,
         "pool_timeout": 30,
     }
+    REPORT_EXPORT_DIR = os.environ.get("REPORT_EXPORT_DIR", "/tmp/reports")
